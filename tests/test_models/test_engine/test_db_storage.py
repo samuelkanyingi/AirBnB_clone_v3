@@ -21,6 +21,7 @@ import unittest
 DBStorage = db_storage.DBStorage
 classes = {"Amenity": Amenity, "City": City, "Place": Place,
            "Review": Review, "State": State, "User": User}
+print(f"Storage selected: {models.storage_t}")
 
 
 class TestDBStorageDocs(unittest.TestCase):
@@ -39,11 +40,11 @@ class TestDBStorageDocs(unittest.TestCase):
 
     def test_pep8_conformance_test_db_storage(self):
         """Test tests/test_models/test_db_storage.py conforms to PEP8."""
+        error_msg = "Found code style errors (and warnings)."
         pep8s = pep8.StyleGuide(quiet=True)
         result = pep8s.check_files(['tests/test_models/test_engine/\
-test_db_storage.py'])
-        self.assertEqual(result.total_errors, 0,
-                         "Found code style errors (and warnings).")
+                                    test_db_storage.py'])
+        self.assertEqual(result.total_errors, 0, error_msg)
 
     def test_db_storage_module_docstring(self):
         """Test for the db_storage.py module docstring"""
@@ -68,7 +69,7 @@ test_db_storage.py'])
                             "{:s} method needs a docstring".format(func[0]))
 
 
-class TestFileStorage(unittest.TestCase):
+class TestDBStorage(unittest.TestCase):
     """Test the FileStorage class"""
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_all_returns_dict(self):
@@ -86,3 +87,21 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_save(self):
         """Test that save properly saves objects to file.json"""
+
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_get_invalid_input(self):
+        """Test retrieving with invalid input"""
+        invalid_cls = "NewState"
+        invalid_id = 34533
+        returned_obj = self.DBStorage.get(invalid_cls, invalid_id)
+        self.assertIsNone(returned_obj)
+
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_get_valid_input(self):
+        """Test if an object has been successfully retrieved"""
+        obj_id = self.obj.id
+        test_obj = "State"
+        first_state_id = list(storage.all(test_obj).values())[0].id
+        returned_obj = self.DBStorage.get(test_obj, first_state_id)
+        self.assertIsNotNone(returned_obj)
+        self.assertEqual(returned_obj.id, obj_id)

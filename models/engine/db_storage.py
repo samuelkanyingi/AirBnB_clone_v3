@@ -85,3 +85,17 @@ class DBStorage:
     def close(self):
         """call remove() method on the private session attribute"""
         self.__session.remove()
+
+    def get(self, cls, id):
+        """ retrieves one object """
+        # check if cls is valid and exists
+        if cls and id:
+            # search in current database session
+            try:
+                obj = self.__session.query(cls).get(id)
+                return obj
+            except Exception as e:
+                print(f"Could not retrieve because of: {e}")
+                return None
+        else:
+            return None
