@@ -15,6 +15,7 @@ def status():
 @app_views.route("/stats")
 def stats():
     """retrieve the number of each object by type"""
+    storage.reload()
     stats_dict = {
             "amenities": storage.count('Amenity'),
             "cities": storage.count('City'),
