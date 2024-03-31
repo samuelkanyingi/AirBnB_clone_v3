@@ -86,7 +86,6 @@ class FileStorage:
         if cls and id and cls in classes.values():
             # create key
             key = f"{cls.__name__}.{id}"
-            
             # search key
             if key in self.__objects:
                 return self.__objects[key]
