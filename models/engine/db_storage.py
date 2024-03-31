@@ -74,13 +74,19 @@ class DBStorage:
     def count(self, cls=None):
         """A method to count the number of objects in storage"""
         if cls is None:
-            count = sum([self.__session.query(cls).count()
-                        for cls in classes.values()])
+            # Count all objects in all classes
+            total_count = 0
+            for cls_obj in classes.values():
+                count = self.__session.query(cls_obj).count()
+                total_count += count
+
+        # count objects in a specific class if exists
         elif cls in classes.values():
-            count = self.__session.query(cls).count()
+            total_count = self.__session.query(cls).count()
         else:
-            count = 0
-        return count
+            # invalid class provided
+            total_count = 0
+        return total_count
 
     def close(self):
         """call remove() method on the private session attribute"""
@@ -89,7 +95,7 @@ class DBStorage:
     def get(self, cls, id):
         """ retrieves one object """
         # check if cls is valid and exists
-        if cls and id:
+        if cls and id and cls in classes.values():
             # search in current database session
             try:
                 obj = self.__session.query(cls).get(id)
