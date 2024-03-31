@@ -75,18 +75,12 @@ class DBStorage:
         """A method to count the number of objects in storage"""
         if cls is None:
             # Count all objects in all classes
-            total_count = 0
-            for cls_obj in classes.values():
-                count = self.__session.query(cls_obj).count()
-                total_count += count
-
-        # count objects in a specific class if exists
-        elif cls in classes.values():
-            total_count = self.__session.query(cls).count()
+            return len(self.all())
+        elif type(cls) is str:
+            cls = classes.get(cls)
+            return len(self.all(cls))
         else:
-            # invalid class provided
-            total_count = 0
-        return total_count
+            return len(self.all(cls))
 
     def close(self):
         """call remove() method on the private session attribute"""
