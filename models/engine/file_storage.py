@@ -82,14 +82,15 @@ class FileStorage:
     def get(self, cls, id):
         """ retrieves one object """
         if cls and id:
+            print(type(cls))
             key = ""
             if isinstance(cls, str):
                 key = "{}.{}".format(cls, id)
             else:
-                if cls in classes.values():
+                if cls.__name__ in classes.keys():
                     # create key
                     key = "{}.{}".format(cls.__name__, id)
             # search key
-            if key in self.__objects:
+            if key in self.__objects.keys():
                 return self.__objects[key]
         return None
