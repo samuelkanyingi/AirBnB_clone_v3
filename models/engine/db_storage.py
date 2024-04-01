@@ -95,7 +95,6 @@ class DBStorage:
                 obj = self.__session.query(cls).get(id)
                 return obj
             except Exception as e:
-                print(f"Could not retrieve because of: {e}")
                 return None
         else:
             return None

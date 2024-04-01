@@ -84,11 +84,11 @@ class FileStorage:
         if cls and id:
             key = ""
             if isinstance(cls, str):
-                key = f"{cls}.{id}"
+                key = "{}.{}".format(cls, id)
             else:
                 if cls in classes.values():
                     # create key
-                    key = f"{cls.__name__}.{id}"
+                    key = "{}.{}".format(cls.__name__, id)
             # search key
             if key in self.__objects:
                 return self.__objects[key]
