@@ -21,16 +21,16 @@ def teardown_appcontext(exception=None):
 
 @app.errorhandler(404)
 def not_found(e):
+    """ handles error 404"""
     msg = {
-            "error": "Not found"
+            'error': 'Not found'
           }
-    return msg
+    return msg, 404
 
 
 if __name__ == "__main__":
-
+    """ run only when called directly and set default configs"""
     HOST = os.genev('HBNB_API_HOST', '0.0.0.0')
     PORT = int(os.genenv('HBNB_API_PORT', 5000))
 
-    """ run only when called directly and set default configs"""
     app.run(debug=True, threaded=True, host=HOST, port=PORT)
