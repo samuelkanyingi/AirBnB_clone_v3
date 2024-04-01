@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """ create routes for index page """
+from flask import jsonify
 from api.v1.views import app_views
 from models import storage
 
@@ -8,7 +9,7 @@ from models import storage
 def status():
     """ creates route to 'api/v1/status'"""
     status_obj = {"status": "OK"}
-    return status_obj
+    return jsonify(status_obj)
 
 
 @app_views.route("/stats", methods=['GET'])
@@ -22,4 +23,4 @@ def stats():
             "states": storage.count('State'),
             "users": storage.count('User')
             }
-    return stats_obj
+    return jsonify(stats_obj)
