@@ -76,7 +76,7 @@ class DBStorage:
         if cls is None:
             # Count all objects in all classes
             return len(self.all())
-        elif type(cls) is str:
+        elif isinstance(cls, str):
             cls = classes.get(cls)
             return len(self.all(cls))
         else:

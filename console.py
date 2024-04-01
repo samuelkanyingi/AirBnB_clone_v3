@@ -78,6 +78,7 @@ class HBNBCommand(cmd.Cmd):
         if args[0] in classes:
             if len(args) > 1:
                 key = args[0] + "." + args[1]
+                print(key)
                 if key in models.storage.all():
                     print(models.storage.all()[key])
                 else:
