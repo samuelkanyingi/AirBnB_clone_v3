@@ -18,10 +18,10 @@ def get_allamenities():
 @app_views.route('/amenities/<amenity_id>', methods=['GET'])
 def getAmenities(amenity_id):
     """ get amenity by id """
-    Amenity = storage.get(Amenity, amenity_id)
-    if not Amenity:
+    amenity = storage.get(Amenity, amenity_id)
+    if not amenity:
         abort(404)
-    return jsonify(Amenity.to_dict())
+    return jsonify(amenity.to_dict())
 
 
 @app_views.route('/amenities/<amenities_id>', methods=['DELETE'])
