@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""create routes for state page"""
+"""Create routes for state page"""
 from api.v1.views import app_views
 from flask import abort, jsonify, request, make_response
 from models import storage
@@ -8,7 +8,7 @@ from models.state import State
 
 @app_views.route("/states", methods=['GET'], strict_slashes=False)
 def get_all_states():
-    """retrieves a list of all State objects"""
+    """Retrieves a list of all State objects"""
     all_states = storage.all(State)
     state_objs = []
     for state in all_states.values():
@@ -19,7 +19,15 @@ def get_all_states():
 @app_views.route("/states/<state_id>", methods=['GET'],
                  strict_slashes=False)
 def get_state(state_id):
-    """retrieve state by id"""
+    """
+    Retrieve state by id
+
+    Args:
+        state_id: the unique id of the state object
+
+    Returns:
+        state object in JSON format
+    """
     state = storage.get("State", state_id)
     if state is None:
         abort(404)
@@ -29,7 +37,7 @@ def get_state(state_id):
 @app_views.route("/states/<state_id>", methods=['DELETE'],
                  strict_slashes=False)
 def delete_state(state_id):
-    """delete a state object by id"""
+    """Delete a state object by id"""
     state = storage.get("State", state_id)
     if state:
         storage.delete(state)
@@ -65,9 +73,15 @@ def create_state():
 @app_views.route("/states/<state_id>", methods=['PUT'],
                  strict_slashes=False)
 def update_state(state_id):
-    """Updates a State object by id """
+    """
+    Updates a State object by id
 
-    # retrieve state
+    Args:
+        state_id: the unique id of the state object
+
+    Returns:
+        Updated state object in JSON format, and code 200
+    """
     state = storage.get("State", state_id)
     if state is None:
         abort(404)
