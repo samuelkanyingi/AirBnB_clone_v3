@@ -14,7 +14,7 @@ def get_all_states():
     state_objs = []
     for state in all_states.values():
         state_objs.append(state.to_dict())
-    return state_objs
+    return jsonify(state_objs)
 
 
 @app_views.route("/states/<state_id>", methods=['GET'],
