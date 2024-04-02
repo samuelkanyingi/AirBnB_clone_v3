@@ -11,10 +11,9 @@ def get_all_amenities():
     """ get all amenities """
     all_amenities = storage.all(Amenity)
     amenities_list = []
-    if not all_amenities:
-        for amenity in all_amenities.values():
-            amenities_list.append(amenity.to_dict())
-        return jsonify(amenities_list)
+    for amenity in all_amenities.values():
+        amenities_list.append(amenity.to_dict())
+    return jsonify(amenities_list)
 
 
 @app_views.route('/amenities/<amenity_id>', methods=['GET'])
