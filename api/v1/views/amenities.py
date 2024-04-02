@@ -5,18 +5,20 @@ from models import storage
 from api.v1.views import app_views
 from models.amenity import Amenity
 
+
 @app_views.route('/amenities', methods=['GET'])
-def get_allamenities():
+def get_all_amenities():
     """ get all amenities """
-    amenity_dict = []
     all_amenities = storage.all(Amenity)
-    for amenity in all_amenities.values():
-        amenity_dict.append(amenity.to_dict())
-    return amenity_dict
+    amenities_list = []
+    if not all_amenities:
+        for amenity in all_amenities.values():
+            amenities_list.append(amenity.to_dict())
+        return jsonify(amenities_list)
 
 
 @app_views.route('/amenities/<amenity_id>', methods=['GET'])
-def getAmenities(amenity_id):
+def get_amenity(amenity_id):
     """ get amenity by id """
     amenity = storage.get(Amenity, amenity_id)
     if not amenity:
@@ -57,7 +59,7 @@ def update_amenities():
         abort(400, 'Not a JSON')
     if not amenity:
         abort(404)
-    ignore_keys = i['id, created_at, updated_at']
+    ignore_keys = ['id, created_at, updated_at']
     for key, value in data.items():
         if key not in ignore_keys:
             setattr(amenity, key, value)
