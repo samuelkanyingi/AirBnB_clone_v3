@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""create routes for index page"""
+"""create routes for state page"""
 from api.v1.views import app_views
 from flask import abort, jsonify, request, make_response
 from models import storage
