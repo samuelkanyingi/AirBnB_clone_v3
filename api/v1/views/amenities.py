@@ -3,9 +3,9 @@
 from flask import abort, jsonify, request
 from models import storage
 from api.v1.views import app_views
+from models.amenities import Amenity
 
-
-@app_views.route('/amenities/', methods=['GET'])
+@app_views.route('/amenity', methods=['GET'])
 def get_allamenities():
     """ get all amenities """
     amenities = [amenity.to_dict()
