@@ -30,7 +30,7 @@ def not_found(e):
 
 if __name__ == "__main__":
     """ run only when called directly and set default configs"""
-    HOST = os.genev('HBNB_API_HOST', '0.0.0.0')
-    PORT = int(os.genenv('HBNB_API_PORT', 5000))
+    HOST = os.getenv('HBNB_API_HOST', '0.0.0.0')
+    PORT = int(os.getenv('HBNB_API_PORT', 5000))
 
     app.run(debug=True, threaded=True, host=HOST, port=PORT)
