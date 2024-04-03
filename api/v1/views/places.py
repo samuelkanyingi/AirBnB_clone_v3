@@ -14,9 +14,10 @@ def get_places_by_cityID(city_id):
     city = storage.get("City", city_id)
     if not city:
         abort(404)
+
     places = []
     for place in city.places:
-        places.append(city.to_dict)
+        places.append(place.to_dict)
     return jsonify(places)
 
 
@@ -59,8 +60,8 @@ def create_place(city_id):
     if 'name' not in data.keys():
         abort(400, 'Missing name')
     # create a new place
-    place = Place(**data)
-    setattr(place, 'city_id', city_id)
+    new_place = Place(**data)
+    setattr(new_place, 'city_id', city_id)
     storage.new(place)
     storage.save()
     return make_response(jsonify(place.to_dict()), 201)

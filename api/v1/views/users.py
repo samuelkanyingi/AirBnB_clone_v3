@@ -50,8 +50,8 @@ def create_user():
         abort(400, 'Missing email')
     if 'password' not in data:
         abort(400, 'Missing passowrd')
-    user = User(**data)
-    storage.new(user)
+    new_user = User(**data)
+    storage.new(new_user)
     storage.save()
     return make_response(jsonify(user.to_dict()), 201)
 
