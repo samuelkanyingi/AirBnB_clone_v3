@@ -72,7 +72,6 @@ class FileStorage:
     def get(self, cls, id):
         """ retrieves one object """
         if cls and id:
-            print(type(cls))
             key = ""
             if isinstance(cls, str):
                 key = "{}.{}".format(cls, id)
