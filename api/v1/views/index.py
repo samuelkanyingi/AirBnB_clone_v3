@@ -5,7 +5,7 @@ from api.v1.views import app_views
 from models import storage
 
 
-@app_views.route("/status/")
+@app_views.route("/status")
 def status():
     """Creates route to 'api/v1/status'"""
     status_obj = {"status": "OK"}
