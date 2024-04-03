@@ -16,6 +16,7 @@ app.register_blueprint(app_views)
 # start CORS with the app instance
 CORS(app, resources={r"/*": {"origins": "0.0.0.0"}})
 
+
 @app.teardown_appcontext
 def teardown_appcontext(exception):
     """close database connection and release resources"""
