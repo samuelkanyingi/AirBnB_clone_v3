@@ -6,9 +6,10 @@ from api.v1.views import app_views
 from models.amenity import Amenity
 
 
-@app_views.route('/amenities', methods=['GET'])
+@app_views.route('/amenities', methods=['GET'],
+                 strict_slashes=False)
 def get_all_amenities():
-    """ get all amenities """
+    """Get all amenities """
     all_amenities = storage.all(Amenity)
     amenities_list = []
     for amenity in all_amenities.values():
@@ -16,18 +17,20 @@ def get_all_amenities():
     return jsonify(amenities_list)
 
 
-@app_views.route('/amenities/<amenity_id>', methods=['GET'])
+@app_views.route('/amenities/<amenity_id>', methods=['GET'],
+                 strict_slashes=False)
 def get_amenity(amenity_id):
-    """ get amenity by id """
+    """Get amenity by id """
     amenity = storage.get(Amenity, amenity_id)
     if not amenity:
         abort(404)
     return jsonify(amenity.to_dict())
 
 
-@app_views.route('/amenities/<amenity_id>', methods=['DELETE'])
+@app_views.route('/amenities/<amenity_id>', methods=['DELETE'],
+                 strict_slashes=False)
 def delete_amenities(amenity_id):
-    """ delete amenities by id """
+    """Delete amenities by id """
     amenity = storage.get(Amenity, amenity_id)
     if not amenity:
         abort(404)
@@ -36,11 +39,12 @@ def delete_amenities(amenity_id):
     return jsonify({}), 200
 
 
-@app_views.route('/amenities', methods=['POST'])
+@app_views.route('/amenities', methods=['POST'],
+                 strict_slashes=False)
 def post_amenities():
-    """ create amenity """
+    """Create amenity """
     data = request.get_json()
-    if data is None:
+    if not data:
         abort(400, 'Not a JSON')
     if 'name' not in data:
         abort(400, 'Missing name')
@@ -49,12 +53,13 @@ def post_amenities():
     return jsonify(new_amenity.to_dict()), 201
 
 
-@app_views.route('/amenities/<amenity_id>', methods=['PUT'])
+@app_views.route('/amenities/<amenity_id>', methods=['PUT'],
+                 strict_slashes=False)
 def update_amenities():
-    """ update amenities """
+    """Update amenities """
     data = request.get_json()
     amenity = storage.get(Amenity, amenity_id)
-    if data is None:
+    if not data:
         abort(400, 'Not a JSON')
     if not amenity:
         abort(404)
