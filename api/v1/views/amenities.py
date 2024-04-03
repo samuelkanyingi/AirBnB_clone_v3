@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """ create routes for amenities page """
-from flask import abort, jsonify, request
+from flask import abort, jsonify, request, make_response
 from models import storage
 from api.v1.views import app_views
 from models.amenity import Amenity
@@ -36,7 +36,7 @@ def delete_amenities(amenity_id):
         abort(404)
     storage.delete(amenity)
     storage.save()
-    return jsonify({}), 200
+    return make_response(jsonify({}), 200)
 
 
 @app_views.route('/amenities', methods=['POST'],
@@ -50,7 +50,7 @@ def post_amenities():
         abort(400, 'Missing name')
     new_amenity = Amenity(**data)
     storage.save()
-    return jsonify(new_amenity.to_dict()), 201
+    return make_response(jsonify(new_amenity.to_dict()), 201)
 
 
 @app_views.route('/amenities/<amenity_id>', methods=['PUT'],
@@ -68,4 +68,4 @@ def update_amenities():
         if key not in ignore_keys:
             setattr(amenity, key, value)
     storage.save()
-    return jsonify(amenity.to_dict()), 200
+    return make_response(jsonify(amenity.to_dict()), 200)
