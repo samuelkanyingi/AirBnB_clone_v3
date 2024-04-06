@@ -15,19 +15,20 @@ import os
                  strict_slashes=False)
 def get_place_amenities(place_id):
     """Retrieves the list of all Amenity objects of a place"""
+    # get the place by ID
     place = storage.get("Place", place_id)
     if not place:
         abort(404)
     amenities_list = []
     # check storage type
-    if os.getenv('HBNB_TYPE_STORAGE') == "db":
+    if os.environ.get('HBNB_TYPE_STORAGE') == "db":
         for amenity in place.amenities:
             amenities_list.append(amenity.to_dict())
     else:
         for amenity_id in place.amenity_ids:
             amenities_list.append(storage.get(Amenity, amenity_id).to_dict())
 
-    return jsonify(amenities)
+    return jsonify(amenities_list)
 
 
 @app_views.route('/places/<place_id>/amenities/<amenity_id>',
