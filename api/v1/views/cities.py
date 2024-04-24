@@ -33,9 +33,11 @@ def create_city(state_id):
     if state is None:
         abort(404)
 
-    data = request.get_json()
-    if not data:
+    # check if HTTP body is valid json
+    if request.headers['Content-Type'] != 'application/json':
         abort(400, 'Not a JSON')
+
+    data = request.get_json()
     if 'name' not in data:
         abort(400, 'Missing name')
 
@@ -62,6 +64,11 @@ def update_city(city_id):
     city = storage.get(City, city_id)
     if city is None:
         abort(404)
+
+    # check if HTTP REquest body is valid json
+    if request.headers['Content-Type'] != 'application/json':
+        abort(400, 'Not a JSON')
+
     data = request.get_json()
     if not data:
         abort(404)
