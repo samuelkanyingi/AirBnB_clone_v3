@@ -87,10 +87,12 @@ def update_state(state_id):
     if state is None:
         abort(404)
 
+    # check content type
+    if request.headers['Content-Type'] != 'application/json':
+        abort(400, 'Not a JSON')
+
     # parse http body to dict
     new_data = request.get_json()
-    if not new_data:
-        abort(400, 'Not a JSON')
 
     # Update the State and save
     for k, v in new_data.items():
