@@ -53,12 +53,12 @@ def delete_state(state_id):
 def create_state():
     """Creates a state"""
 
+    # check if JSON parsing is successfull
+    if request.headers['Content-Type'] != 'application/json':
+        abort(400, 'Not a JSON')
+
     # transform http body request to dictionary
     new_state = request.get_json()
-
-    # check if JSON parsing is successfull
-    if new_state is None:
-        abort(400, 'Not a JSON')
 
     # check if name of new state is specified
     if 'name' not in new_state.keys():
