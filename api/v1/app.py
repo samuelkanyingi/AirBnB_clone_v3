@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """ main script for the Flask app"""
 import os
-from flask import Flask
+from flask import Flask, jsonify
 from models import storage
 from api.v1.views import app_views
 from flask_cors import CORS
@@ -29,7 +29,7 @@ def not_found(e):
     msg = {
             'error': 'Not found'
           }
-    return msg, 404
+    return jsonify(msg), 404
 
 
 if __name__ == "__main__":

@@ -57,7 +57,7 @@ def create_state():
     new_state = request.get_json()
 
     # check if JSON parsing is successfull
-    if not new_state:
+    if new_state is None:
         abort(400, 'Not a JSON')
 
     # check if name of new state is specified
