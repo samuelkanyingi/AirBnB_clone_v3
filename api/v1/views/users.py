@@ -22,7 +22,7 @@ def get_all_users():
 def get_user(user_id):
     """Retrieves a user object by Id"""
     user = storage.get("User", user_id)
-    if not user:
+    if user is None:
         abort(404)
     return jsonify(user.to_dict())
 
@@ -32,7 +32,7 @@ def get_user(user_id):
 def delete_user(user_id):
     """Deletes a user object by Id"""
     user = storage.get("User", user_id)
-    if not user:
+    if user is None:
         abort(404)
     user.delete()
     storage.save()
@@ -43,13 +43,19 @@ def delete_user(user_id):
                  strict_slashes=False)
 def create_user():
     """Creates a new User object"""
-    data = request.get_json()
-    if not data:
+
+    # check if valid json
+    if request.headers['Content-Type'] != 'application/json':
         abort(400, 'Not a JSON')
-    if 'email' not in data:
+
+    # retrieve data
+    data = request.get_json()
+    if 'email' not in data.keys():
         abort(400, 'Missing email')
-    if 'password' not in data:
+    if 'password' not in data.keys():
         abort(400, 'Missing passowrd')
+
+    # create a User
     new_user = User(**data)
     storage.new(new_user)
     storage.save()
@@ -61,15 +67,17 @@ def create_user():
 def update_user(user_id):
     """Updates a User object by Id"""
     user = storage.get("User", user_id)
-    if not user:
+    if user is None:
         abort(404)
-    data = request.get_json()
-    if not data:
+    # check if content type is JSON
+    if request.headers['Content-Type'] != 'application/json':
         abort(400, 'Not a JSON')
-
+    # retrieve data
+    data = request.get_json()
     # Update the user attributes based on the JSON data
+    ignore_keys = ['id', 'email', 'created_at', 'updated_at']
     for key, value in data.items():
-        if key not in ['id', 'email', 'created_at', 'updated_at']:
+        if key not in ignore_keys:
             setattr(user, key, value)
     storage.save()
     return make_response(jsonify(user.to_dict()), 200)

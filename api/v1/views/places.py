@@ -12,7 +12,7 @@ from models.place import Place
 def get_places_by_cityID(city_id):
     """Retrieves a list of all Place objects of a city"""
     city = storage.get("City", city_id)
-    if not city:
+    if city is None:
         abort(404)
 
     places = []
@@ -25,7 +25,7 @@ def get_places_by_cityID(city_id):
 def get_place_by_id(place_id):
     """Retrieves a Place object by Id"""
     place = storage.get("Place", place_id)
-    if not place:
+    if place is None:
         abort(404)
     return jsonify(place.to_dict())
 
@@ -35,7 +35,7 @@ def get_place_by_id(place_id):
 def delete_place(place_id):
     """Deletes a Place object by Id"""
     place = storage.get("Place", place_id)
-    if not place:
+    if place is None:
         abort(404)
     place.delete()
     storage.save()
@@ -47,18 +47,23 @@ def delete_place(place_id):
 def create_place(city_id):
     """Creates a new Place object to a city object"""
     city = storage.get("City", city_id)
-    if not city:
+    if city is None:
         abort(404)
-    data = request.get_json()
-    if not data:
+
+    # check if content type is json
+    if request.headers['Content-Type'] != 'application/json':
         abort(400, 'Not a JSON')
+    # retrieve the data
+    data = request.get_json()
     if 'user_id' not in data.keys():
         abort(400, 'Missing user_id')
+    # get user
     user = storage.get("User", data["user_id"])
-    if not user:
+    if user is None:
         abort(404)
     if 'name' not in data.keys():
         abort(400, 'Missing name')
+
     # create a new place
     new_place = Place(**data)
     setattr(new_place, 'city_id', city_id)
@@ -72,16 +77,18 @@ def create_place(city_id):
 def update_place(place_id):
     """Updates a Place object"""
     place = storage.get("Place", place_id)
-    if not place:
+    if place is None:
         abort(404)
-    data = request.get_json()
-    if not data:
+    # check if valid json
+    if request.headers['Content-Type'] != 'application/json':
         abort(400, 'Not a JSON')
-
+    # retrieve body of http request
+    data = request.get_json()
+    ignore_keys = ['id', 'user_id', 'city_id', 'created_at', 'updated_at']
     # Update the Place object's attributes using the provided JSON data
     for key, value in data.items():
         # preserve these attributes
-        if key not in ['id', 'user_id', 'city_id', 'created_at', 'updated_at']:
+        if key not in ignore_keys:
             setattr(place, key, value)
     storage.save()
     return make_response(jsonify(place.to_dict()), 200)
