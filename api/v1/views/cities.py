@@ -42,8 +42,9 @@ def create_city(state_id):
     if request.headers['Content-Type'] != 'application/json':
         abort(400, 'Not a JSON')
 
+    # retrieve data and check if name key is passed in the request
     data = request.get_json()
-    if 'name' not in data:
+    if 'name' not in data.keys():
         abort(400, 'Missing name')
 
     data['state_id'] = state_id
