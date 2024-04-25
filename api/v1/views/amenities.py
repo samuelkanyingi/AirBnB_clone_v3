@@ -39,6 +39,8 @@ def delete_amenities(amenity_id):
     return make_response(jsonify({}), 200)
 
 
+@app_views.route('/amenities/', methods=['POST'],
+                 strict_slashes=False)
 @app_views.route('/amenities', methods=['POST'],
                  strict_slashes=False)
 def post_amenities():
@@ -53,30 +55,27 @@ def post_amenities():
     # check presence of correct key-value data
     if 'name' not in data:
         abort(400, 'Missing name')
+
     new_amenity = Amenity(**data)
     storage.save()
     return make_response(jsonify(new_amenity.to_dict()), 201)
 
 
 @app_views.route('/amenities/<amenity_id>', methods=['PUT'],
-                 strict_slashes=False)
-def update_amenities():
-    """Update amenities """
-    # check if amenity exists
+                 strict_slashes=True)
+def update_amenity(amenity_id):
+    """ update amenities """
     amenity = storage.get(Amenity, amenity_id)
     if amenity is None:
         abort(404)
 
-    # check if content type is json
+    # check if HTTP REquest body is valid json
     if request.headers['Content-Type'] != 'application/json':
         abort(400, 'Not a JSON')
 
-    # retrieve data and check if name key exists
     data = request.get_json()
-    if 'name' not in data.keys():
-        abort(400, 'Missing name')
 
-    ignore_keys = ['id, created_at, updated_at']
+    ignore_keys = ['id', 'created_at', 'updated_at']
     for key, value in data.items():
         if key not in ignore_keys:
             setattr(amenity, key, value)
