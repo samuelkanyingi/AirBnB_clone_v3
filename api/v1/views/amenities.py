@@ -22,7 +22,7 @@ def get_all_amenities():
 def get_amenity(amenity_id):
     """Get amenity by id """
     amenity = storage.get(Amenity, amenity_id)
-    if not amenity:
+    if amenity is None:
         abort(404)
     return jsonify(amenity.to_dict())
 
@@ -32,7 +32,7 @@ def get_amenity(amenity_id):
 def delete_amenities(amenity_id):
     """Delete amenities by id """
     amenity = storage.get(Amenity, amenity_id)
-    if not amenity:
+    if amenity is None:
         abort(404)
     storage.delete(amenity)
     storage.save()
@@ -43,9 +43,14 @@ def delete_amenities(amenity_id):
                  strict_slashes=False)
 def post_amenities():
     """Create amenity """
-    data = request.get_json()
-    if not data:
+
+    # check if content-type is json
+    if request.headers['Content-Type'] != 'application/json':
         abort(400, 'Not a JSON')
+
+    data = request.get_json()
+
+    # check presence of correct key-value data
     if 'name' not in data:
         abort(400, 'Missing name')
     new_amenity = Amenity(**data)
@@ -57,12 +62,20 @@ def post_amenities():
                  strict_slashes=False)
 def update_amenities():
     """Update amenities """
-    data = request.get_json()
+    # check if amenity exists
     amenity = storage.get(Amenity, amenity_id)
-    if not data:
-        abort(400, 'Not a JSON')
-    if not amenity:
+    if amenity is None:
         abort(404)
+
+    # check if content type is json
+    if request.headers['Content-Type'] != 'application/json':
+        abort(400, 'Not a JSON')
+
+    # retrieve data and check if name key exists
+    data = request.get_json()
+    if 'name' not in data.keys():
+        abort(400, 'Missing name')
+
     ignore_keys = ['id, created_at, updated_at']
     for key, value in data.items():
         if key not in ignore_keys:
